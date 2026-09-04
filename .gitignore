@@ -30,10 +30,8 @@ pnpm-debug.log*
 *.dll
 *.so
 *.dylib
-backend/server.exe
-server.exe
-backend/server
-server
+/backend/server
+/server
 
 # Local standalone database cache
 volq_data.json
