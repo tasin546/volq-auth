@@ -32,6 +32,8 @@ pnpm-debug.log*
 *.dylib
 /backend/server
 /server
+!backend/bin/
+!backend/bin/*
 
 # Local standalone database cache
 volq_data.json

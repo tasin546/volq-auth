@@ -1,0 +1,24 @@
+{
+  "name": "volq-auth",
+  "version": "1.0.0",
+  "description": "VOLQ-Auth - Zero-Cost Enterprise Anti-Tamper Licensing Platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
+    "build": "npm run build --prefix frontend",
+    "postinstall": "npm install --prefix frontend"
+  },
+  "keywords": [
+    "auth",
+    "licensing",
+    "anti-tamper",
+    "keyauth",
+    "security"
+  ],
+  "author": "tasin546",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

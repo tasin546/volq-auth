@@ -68,6 +68,35 @@ docker compose up -d
 
 ---
 
+## Universal Multi-Platform Runner (Linux, macOS, Windows, Hidden Cloud)
+
+VOLQ-Auth includes a built-in zero-configuration Node.js orchestrator (`index.js`) that automatically detects your OS and CPU architecture, applies execution permissions, and boots both the high-performance Go API backend and Next.js frontend concurrently.
+
+### Run on Any Machine or Cloud
+```bash
+# 1. Clone repository
+git clone https://github.com/tasin546/volq-auth.git
+cd volq-auth
+
+# 2. Run with Node.js (Linux, macOS, Windows)
+node index.js
+# Or
+npm start
+```
+
+### Hosting on Hidden Cloud / Pterodactyl Container
+1. **Server Type**: Create a standard **Node.js** container egg on Hidden Cloud.
+2. **Startup Command**: Set to `node index.js` (or `npm start`).
+3. **Port Binding**: Hidden Cloud automatically assigns a port (e.g. `SERVER_PORT` / `PORT`). The orchestrator detects this port automatically, serving both the web dashboard and reverse-proxied API on your single assigned port!
+4. **Environment Variables**: Add your Neon database URL under the panel Variables tab (or leave default to auto-connect to Neon PostgreSQL cloud):
+   ```env
+   DATABASE_URL=postgresql://...
+   JWT_SECRET=your_jwt_secret
+   ```
+5. **No Go Toolchain Required**: The repository includes pre-built static binaries for Linux x64, macOS Apple Silicon/Intel, and Windows x64 in `backend/bin/`.
+
+---
+
 ## Repository Structure
 
 ```
