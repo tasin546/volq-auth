@@ -35,9 +35,12 @@ export default function LoginPage() {
       if (err.response?.data?.error) {
         setError(err.response.data.error);
       } else if (err.code === 'ERR_NETWORK' || !err.response) {
-        setError('Cannot connect to VOLQ-Auth backend at http://localhost:8080. Is the backend server running?');
-      } else if (err.response?.status === 500) {
-        setError('Backend server error (500). Please check your backend terminal and PostgreSQL connection.');
+        setError('Network Error: Unable to reach the API server. Please check your internet connection.');
+      } else if (err.response?.status === 500 || err.response?.status === 502 || err.response?.status === 504) {
+        const detail = err.response?.data?.error || err.response?.data?.message;
+        setError(detail 
+          ? `Backend Error (${err.response.status}): ${detail}`
+          : `Gateway Error (${err.response?.status || 500}): Dashboard proxy could not connect to Go backend. Please check NEXT_PUBLIC_API_URL in Railway (visit /api/health to inspect connection).`);
       } else {
         setError(err.message || 'Authentication failed. Please check your credentials.');
       }
