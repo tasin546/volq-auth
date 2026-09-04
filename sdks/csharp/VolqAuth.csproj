@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>VolqAuth</RootNamespace>
+    <PackageId>VolqAuth.Client</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>VOLQ Auth Core Team</Authors>
+    <Description>Hardened C# .NET SDK for VOLQ-Auth Licensing Platform</Description>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <PackageReference Include="System.Management" Version="7.0.2" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,29 @@
+{
+  "description": "Cloudflare Free Tier WAF & Security Rules for VOLQ-Auth",
+  "rules": [
+    {
+      "name": "Block Malicious User Agents and Debugger Scanners",
+      "action": "block",
+      "expression": "(http.user_agent contains \"Fiddler\") or (http.user_agent contains \"Charles\") or (http.user_agent contains \"Wireshark\") or (http.user_agent contains \"HTTPDebugger\")"
+    },
+    {
+      "name": "Rate Limit Client Authentication Endpoints",
+      "action": "rate_limit",
+      "expression": "(http.request.uri.path eq \"/api/v1/client/init\") or (http.request.uri.path eq \"/api/v1/client/license\")",
+      "rate_limit": {
+        "threshold": 60,
+        "period": 60,
+        "action": "challenge"
+      }
+    },
+    {
+      "name": "Strict SSL/TLS Termination",
+      "action": "execute",
+      "expression": "ssl",
+      "settings": {
+        "ssl": "strict",
+        "min_tls_version": "1.3"
+      }
+    }
+  ]
+}

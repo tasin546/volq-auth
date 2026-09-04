@@ -1,0 +1,45 @@
+services:
+  # 1. VOLQ-Auth Core Backend (Go API Engine)
+  - type: web
+    name: volq-auth-backend
+    runtime: go
+    rootDir: backend
+    buildCommand: go build -o server ./cmd/server
+    startCommand: ./server
+    plan: free
+    healthCheckPath: /api/v1/client/ping
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false # Paste your Neon PostgreSQL URL
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SERVER_MASTER_KEY
+        generateValue: true
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASS
+        value: Admin1234!
+      - key: ADMIN_EMAIL
+        value: admin@volq-auth.local
+
+  # 2. VOLQ-Auth Dashboard (Next.js 14 Web Interface)
+  - type: web
+    name: volq-auth-dashboard
+    runtime: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    plan: free
+    healthCheckPath: /login
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: volq-auth-backend
+          property: host

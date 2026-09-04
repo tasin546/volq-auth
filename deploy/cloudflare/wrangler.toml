@@ -1,0 +1,13 @@
+name = "volq-auth-r2-edge"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+# Cloudflare Free Tier R2 Zero-Egress Storage Binding
+[[r2_buckets]]
+binding = "VOLQ_STORAGE"
+bucket_name = "volq-auth-payloads"
+
+# Optional Cloudflare KV / Cache binding
+# [[kv_namespaces]]
+# binding = "VOLQ_KV"
+# id = "your-kv-namespace-id"

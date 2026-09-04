@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # 1. PostgreSQL Relational Database (Supabase / Neon free-tier compatible)
+  # ============================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: volq-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-volq_auth}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../backend/migrations/001_initial_schema.sql:/docker-entrypoint-initdb.d/001_initial_schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================================
+  # 2. Redis Cache & Replay Guard (Upstash Redis free-tier compatible)
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: volq-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================================
+  # 3. VOLQ-Auth Backend Engine (Go / Gin / Ephemeral Crypto Core)
+  # ============================================================================
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../deploy/Dockerfile.backend
+    container_name: volq-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      ENV: "production"
+      DATABASE_URL: "postgres://postgres:postgres@postgres:5432/volq_auth?sslmode=disable"
+      REDIS_URL: "redis://redis:6379"
+      JWT_SECRET: "${JWT_SECRET:-volq_production_jwt_secret_change_me_in_prod}"
+      SERVER_MASTER_KEY: "${SERVER_MASTER_KEY:-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}"
+      ADMIN_USER: "${ADMIN_USER:-admin}"
+      ADMIN_PASS: "${ADMIN_PASS:-Admin1234!}"
+      ADMIN_EMAIL: "${ADMIN_EMAIL:-admin@volq-auth.local}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ============================================================================
+  # 4. VOLQ-Auth Obsidian Dark Dashboard (Next.js 14)
+  # ============================================================================
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../deploy/Dockerfile.frontend
+    container_name: volq-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: "http://backend:8080"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:
