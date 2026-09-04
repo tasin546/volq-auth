@@ -1,9 +1,19 @@
 import axios from 'axios';
 
+function getBaseUrl() {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  if (!url || url.includes('.internal') || url.includes('.local')) {
+    return '/api/v1';
+  }
+  let trimmed = url.trim().replace(/\/+$/, '');
+  if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+    trimmed = `https://${trimmed}`;
+  }
+  return `${trimmed}/api/v1`;
+}
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL
-    ? `${process.env.NEXT_PUBLIC_API_URL}/api/v1`
-    : '/api/v1',
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
