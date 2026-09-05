@@ -56,7 +56,7 @@ func main() {
 		resellerRepo = repository.NewSQLResellerRepository(db)
 	} else {
 		log.Println("================================================================================")
-		log.Println("[DATABASE] PostgreSQL not running locally.")
+		log.Printf("[DATABASE] PostgreSQL connection failed: %v", err)
 		log.Println("[DATABASE] Seamlessly activating Local Standalone Mode (Zero-Dependency Engine).")
 		log.Println("[DATABASE] Data will automatically persist locally to 'volq_data.json'.")
 		log.Println("================================================================================")

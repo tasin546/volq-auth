@@ -61,9 +61,9 @@ function loadEnv() {
     }
   }
 
-  // Fallback defaults for Neon Cloud PostgreSQL and Security Keys
+  // Fallback defaults for PostgreSQL and Security Keys
   if (!process.env.DATABASE_URL) {
-    process.env.DATABASE_URL = 'postgresql://volq_owner:npg_w9gN7mUhXLAG@ep-noisy-night-axqafr93-pooler.c-4.us-east-2.aws.neon.tech/volq?sslmode=require';
+    process.env.DATABASE_URL = 'postgres://postgres:postgres@localhost:5432/volq_auth?sslmode=disable';
   }
   if (!process.env.JWT_SECRET) {
     process.env.JWT_SECRET = 'volq_super_secret_jwt_key_32bytes_min!';

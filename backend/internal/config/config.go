@@ -52,7 +52,7 @@ func loadDotEnv() {
 func Load() *Config {
 	loadDotEnv()
 	port := getEnv("PORT", "8080")
-	dbURL := getEnv("DATABASE_URL", "postgresql://volq_owner:npg_w9gN7mUhXLAG@ep-noisy-night-axqafr93-pooler.c-4.us-east-2.aws.neon.tech/volq?sslmode=require")
+	dbURL := getEnv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/volq_auth?sslmode=disable")
 	redisURL := getEnv("REDIS_URL", "") // Empty defaults to internal memory cache!
 	jwtSecret := getEnv("JWT_SECRET", "volq_super_secret_jwt_key_32bytes_min!")
 	masterKey := getEnv("SERVER_MASTER_KEY", "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
