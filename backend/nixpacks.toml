@@ -1,0 +1,9 @@
+# Nixpacks configuration for VOLQ-Auth backend
+[phases.setup]
+nixPkgs = ["go"]
+
+[phases.build]
+cmds = ["go build -o server ./cmd/server"]
+
+[start]
+cmd = "./server"

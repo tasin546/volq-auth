@@ -1,0 +1,3 @@
+# Root Nixpacks configuration ensuring both Go and Node.js are available
+[phases.setup]
+nixPkgs = ["go", "nodejs_20"]
